@@ -9,3 +9,4 @@ st.set_page_config(
     page_icon="👋",
     initial_sidebar_state="expanded",
 )
+
