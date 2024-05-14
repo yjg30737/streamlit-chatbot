@@ -8,10 +8,16 @@ Using supabase as database.
 * st-supabase-connection
 
 ## How to Install
-1. git clone ~
-2. pip install -r requirements.txt
-3. streamlit hello
-4. Make .streamlit directory and put secrets.toml into it and copy below:
+Type below:
+
+```
+>>> git clone [THE_REPO_URL]
+>>> pip install -r requirements.txt
+>>> streamlit hello
+```
+
+Then, make .streamlit directory and put secrets.toml into it and copy below:
+
 ```toml
 # .streamlit/secrets.toml
 OPENAI_API_KEY=
@@ -20,7 +26,13 @@ OPENAI_API_KEY=
 SUPABASE_URL = 
 SUPABASE_KEY = 
 ```
-5. streamlit run main.py
+
+Finally, type `streamlit run main.py` to show the result. Browser will pop up and you can play it.
+
+## Preview (TODO)
+[IMAGE]
+
+[VIDEO]
 
 ## Documentation
 It is good practice to read following docs and articles to know the basic of using and making streamlit app.
