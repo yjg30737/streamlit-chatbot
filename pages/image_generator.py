@@ -1,6 +1,5 @@
 import streamlit as st
-from openai import OpenAI
-from widget import image_settings_widget, image_result_widget
+from widget import image_settings_widget, image_result_widget, set_sidebar
 
 st.set_page_config(
     page_title=f"yjg30737's Streamlit Image Generator",
@@ -18,6 +17,6 @@ default_obj = {
     "negative_prompt": "ugly, deformed, noisy, blurry, distorted"
 }
 
-size, prompt, negative_prompt, button = image_settings_widget(default_obj)
+size, prompt, negative_prompt, button = set_sidebar(image_settings_widget, default_obj)
 if button:
     image_result_widget(model, prompt, size)

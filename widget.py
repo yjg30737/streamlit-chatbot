@@ -1,24 +1,33 @@
-import streamlit as st
-from openai import OpenAI
-from constant import CLIENT
 import base64
 import time
 
+import streamlit as st
+
+from constants import CLIENT, DALLE_SIZE, TEXT_MODEL
+
+
 def image_settings_widget(default_obj):
-    size = st.selectbox("Size", ['256x256', '512x512', '1024x1024', '1024x1792', '1792x1024'], index=2)
+    size = st.selectbox("Size", DALLE_SIZE, index=2)
     prompt = st.text_area("Prompt", default_obj["prompt"])
     negative_prompt = st.text_area("Negative Prompt", default_obj["negative_prompt"])
     button = st.button("Generate Image")
     return size, prompt, negative_prompt, button
 
 def chat_model_widget():
-    st.sidebar.title("Settings")
-    st.session_state['openai_model'] = st.sidebar.selectbox(
+    st.title("Settings")
+    st.session_state['openai_model'] = st.selectbox(
         'Select a model',
-        ['gpt-4-0125-preview', 'gpt-4', 'gpt-4-1106-preview', 'gpt-4-vision-preview',
-         'gpt-3.5-turbo', 'gpt-3.5-turbo-16k'],
+        TEXT_MODEL,
     )
     return st.session_state['openai_model']
+
+
+def set_sidebar(widget, *args, **kwargs):
+    if not callable(widget):
+        raise ValueError("The widget argument must be callable.")
+
+    with st.sidebar:
+        return widget(*args, **kwargs)
 
 # init_chat
 def init_chat():
