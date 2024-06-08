@@ -29,10 +29,9 @@ SUPABASE_KEY =
 
 Finally, type `streamlit run main.py` to show the result. Browser will pop up and you can play it.
 
-## Preview (TODO)
-[IMAGE]
+## Preview
 
-[VIDEO]
+https://github.com/yjg30737/streamlit-chatbot/assets/55078043/28a35daf-1d94-470b-8575-10e71e06dfde
 
 ## Documentation
 It is good practice to read following docs and articles to know the basic of using and making streamlit app.
