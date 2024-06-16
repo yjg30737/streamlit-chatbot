@@ -1,4 +1,6 @@
 # streamlit-chatbot
+[![](https://dcbadge.vercel.app/api/server/cHekprskVE)](https://discord.gg/cHekprskVE)
+
 ChatGPT-like Streamlit chatbot & Simple image generator (DALLE3) OpenAI
 Using supabase as database.
 
