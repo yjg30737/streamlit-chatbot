@@ -31,6 +31,9 @@ SUPABASE_KEY =
 
 Finally, type `streamlit run main.py` to show the result. Browser will pop up and you can play it.
 
+## Preview
+[![Streamlit Chatbot preview video](https://img.youtube.com/vi/8pHC8mKl3VI/0.jpg)](https://www.youtube.com/watch?v=8pHC8mKl3VI)
+
 ## Documentation
 It is good practice to read following docs and articles to know the basic of using and making streamlit app.
 
@@ -46,4 +49,4 @@ These help me a lot to develop streamlit application.
 
 ### For making your chatbot and your image generator
 * <a href="https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps">Build a basic LLM chat app</a>
-* <a href="https://medium.com/@arjunaraneta/creating-an-image-generator-with-streamlit-and-replicate-api-hint-its-pretty-easy-a995ff3d1d0a">Creating an image generator with streamlit and replicate api by arjunaraneta</a> 
+* <a href="https://medium.com/@arjunaraneta/creating-an-image-generator-with-streamlit-and-replicate-api-hint-its-pretty-easy-a995ff3d1d0a">Creating an image generator with streamlit and replicate api by arjunaraneta</a>
