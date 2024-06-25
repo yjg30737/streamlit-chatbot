@@ -50,3 +50,14 @@ These help me a lot to develop streamlit application.
 ### For making your chatbot and your image generator
 * <a href="https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps">Build a basic LLM chat app</a>
 * <a href="https://medium.com/@arjunaraneta/creating-an-image-generator-with-streamlit-and-replicate-api-hint-its-pretty-easy-a995ff3d1d0a">Creating an image generator with streamlit and replicate api by arjunaraneta</a>
+
+## Troubleshooting
+If this error shows:
+
+```
+httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+```
+
+That means you need to restore your database. Go to the supabase dashboard to restore it, then it will work like a charm as usual!
+
+If you don't use Supabase a couple of days, you can't connect with it because it suspends the project. Of course, if you are using the Supabase in free, as i am.
