@@ -97,3 +97,40 @@ def image_result_widget(model, prompt, size):
             image_data = _.b64_json
             image_data = base64.b64decode(image_data)
             st.image(image_data, use_column_width=True)
+
+def assistant_widget(assistants):
+    st.title("Assistant")
+    # Show assistants table
+    if assistants:
+        st.session_state['assistant'] = st.selectbox(
+            'Select an assistant',
+            assistants, format_func=lambda x: x['name']
+        )
+    else:
+        st.session_state['assistant'] = None
+    return st.session_state['assistant']
+
+def vector_store_widget(vector_stores):
+    st.title("Vector Store")
+    # Show vector store table
+    if vector_stores:
+        st.session_state['vector_store'] = st.selectbox(
+            'Select a vector',
+            vector_stores, format_func=lambda x: x['name']
+        )
+    else:
+        st.session_state['vector_store'] = None
+    return st.session_state['vector_store']
+
+def file_widget(file_list):
+    st.title("File")
+    # Show file table
+    if file_list:
+        st.session_state['file'] = st.selectbox(
+            'Select a file',
+            list(map(lambda x: x['name'], file_list)),
+        )
+    else:
+        st.session_state['file'] = None
+    return st.session_state['file']
+
