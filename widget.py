@@ -3,7 +3,7 @@ import time
 
 import streamlit as st
 
-from constants import CLIENT, DALLE_SIZE, TEXT_MODEL
+from constants import CLIENT, DALLE_SIZE, TEXT_MODEL, get_message_obj, send_message, EventHandler
 
 
 def image_settings_widget(default_obj):
@@ -51,32 +51,56 @@ def get_chat_history(conn):
             st.markdown(message['content'])
 
 # process_chat
-def process_chat(conn):
+def process_chat(conn, type='chat', instructions='', message_file_id=None, assistant_id=None, thread_id=None):
     # React to user input
     if prompt := st.chat_input('What is up?'):
         # Display user message in chat message container
         with st.chat_message('user'):
             st.markdown(prompt)
-        response_obj = {'role': 'user', 'content': prompt}
+        request_obj = get_message_obj('user', prompt)
         # Add user message to chat history
-        st.session_state.messages.append(response_obj)
+        st.session_state.messages.append(request_obj)
         # Save to the db
-        conn.table('chat').insert(response_obj).execute()
+        conn.table('chat').insert(request_obj).execute()
 
         # Chatbot's response
-        # Display assistant repsonse in chat message container
+        # Display assistant response in chat message container
         with st.chat_message('assistant'):
             # OpenAI API response
-            stream = CLIENT.chat.completions.create(
-                model=st.session_state['openai_model'],
-                messages=[
-                    {'role': m['role'], 'content': m['content']}
-                    for m in st.session_state.messages
-                ],
-                stream=True
-            )
-            response = st.write_stream(stream)
-        response_obj = {'role': 'assistant', 'content': response}
+            if type == 'chat':
+                stream = CLIENT.chat.completions.create(
+                    model=st.session_state['openai_model'],
+                    messages=[
+                        {'role': m['role'], 'content': m['content']}
+                        for m in st.session_state.messages
+                    ],
+                    stream=True
+                )
+            # elif type == 'assistant':
+            #     args = {
+            #         'thread_id': thread_id,
+            #         **request_obj
+            #     }
+            #
+            #     if message_file_id:
+            #         args['attachments'] = [
+            #             {"file_id": message_file_id, "tools": [{"type": "file_search"}]}
+            #         ]
+            #
+            #     CLIENT.beta.threads.messages.create(**args)
+            #
+            #     with CLIENT.beta.threads.runs.stream(
+            #         thread_id=thread_id,
+            #         assistant_id=assistant_id,
+            #         instructions=instructions,
+            #
+            #     TypeError: EventHandler.__init__() takes 1 positional argument but 2 were given
+            #
+            #         event_handler=EventHandler(), <<< This one is the problem
+            #     ) as stream:
+            #
+                response = st.write_stream(stream)
+        response_obj = get_message_obj('assistant', response)
         # Add assistant response to chat history
         st.session_state.messages.append(response_obj)
         # Save to the db
@@ -128,7 +152,7 @@ def file_widget(file_list):
     if file_list:
         st.session_state['file'] = st.selectbox(
             'Select a file',
-            list(map(lambda x: x['name'], file_list)),
+            file_list, format_func=lambda x: x['filename']
         )
     else:
         st.session_state['file'] = None

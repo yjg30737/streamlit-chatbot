@@ -137,7 +137,8 @@ def set_current_thread(assistant_id, messages=None):
     return thread
 
 
-def send_message(message_str, instructions='', message_file=None, assistant_id=None, thread_id=None):
+def send_message(conn,
+                 message_str, instructions='', message_file=None, assistant_id=None, thread_id=None):
     """
     Sends a message to the assistant and handles streaming responses.
 
@@ -149,7 +150,10 @@ def send_message(message_str, instructions='', message_file=None, assistant_id=N
     :yield: Streamed text responses.
     """
     user_obj = get_message_obj("user", message_str)
+    st.session_state.messages.append(user_obj)
+    conn.table('chat').insert(user_obj).execute()
     # _db_handler.append(Conversation, user_obj)
+
     args = {
         'thread_id': thread_id if thread_id else thread_id,
         'role': "user",
@@ -162,20 +166,38 @@ def send_message(message_str, instructions='', message_file=None, assistant_id=N
         ]
 
     CLIENT.beta.threads.messages.create(**args)
+    # Chatbot's response (Assistant)
+    # Display assistant response in chat message container
+    with st.chat_message('assistant'):
+        stream = CLIENT.beta.threads.runs.stream(
+                thread_id=thread_id if thread_id else thread_id,
+                assistant_id=assistant_id if assistant_id else assistant_id,
+                instructions=instructions,
+                event_handler=EventHandler(CLIENT),
+        )
+        response = st.write_stream(stream)
+    response_obj = get_message_obj('assistant', response)
+    # Add assistant response to chat history
+    st.session_state.messages.append(response_obj)
+    # Save to the db
+    conn.table('chat').insert(response_obj).execute()
 
-    response = ''
 
-    with CLIENT.beta.threads.runs.stream(
-            thread_id=thread_id if thread_id else thread_id,
-            assistant_id=assistant_id if assistant_id else assistant_id,
-            instructions=instructions,
-            event_handler=EventHandler(CLIENT),
-    ) as stream:
-        for text in stream.text_deltas:
-            response += text
-            yield text
-
-    ai_obj = get_message_obj("assistant", response)
+    # CLIENT.beta.threads.messages.create(**args)
+    #
+    # response = ''
+    #
+    # with CLIENT.beta.threads.runs.stream(
+    #         thread_id=thread_id if thread_id else thread_id,
+    #         assistant_id=assistant_id if assistant_id else assistant_id,
+    #         instructions=instructions,
+    #         event_handler=EventHandler(CLIENT),
+    # ) as stream:
+    #     for text in stream.text_deltas:
+    #         response += text
+    #         yield text
+    #
+    # ai_obj = get_message_obj("assistant", response)
     # _db_handler.append(Conversation, ai_obj)
 
 
