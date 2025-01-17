@@ -3,7 +3,7 @@ import time
 
 import streamlit as st
 
-from constants import CLIENT, DALLE_SIZE, TEXT_MODEL, get_message_obj, send_message, EventHandler
+from constants import CLIENT, DALLE_SIZE, TEXT_MODEL, get_message_obj
 
 
 def image_settings_widget(default_obj):
@@ -51,7 +51,7 @@ def get_chat_history(conn):
             st.markdown(message['content'])
 
 # process_chat
-def process_chat(conn, type='chat', instructions='', message_file_id=None, assistant_id=None, thread_id=None):
+def process_chat(conn, type='chat'):
     # React to user input
     if prompt := st.chat_input('What is up?'):
         # Display user message in chat message container
@@ -76,29 +76,6 @@ def process_chat(conn, type='chat', instructions='', message_file_id=None, assis
                     ],
                     stream=True
                 )
-            # elif type == 'assistant':
-            #     args = {
-            #         'thread_id': thread_id,
-            #         **request_obj
-            #     }
-            #
-            #     if message_file_id:
-            #         args['attachments'] = [
-            #             {"file_id": message_file_id, "tools": [{"type": "file_search"}]}
-            #         ]
-            #
-            #     CLIENT.beta.threads.messages.create(**args)
-            #
-            #     with CLIENT.beta.threads.runs.stream(
-            #         thread_id=thread_id,
-            #         assistant_id=assistant_id,
-            #         instructions=instructions,
-            #
-            #     TypeError: EventHandler.__init__() takes 1 positional argument but 2 were given
-            #
-            #         event_handler=EventHandler(), <<< This one is the problem
-            #     ) as stream:
-            #
                 response = st.write_stream(stream)
         response_obj = get_message_obj('assistant', response)
         # Add assistant response to chat history
@@ -121,40 +98,3 @@ def image_result_widget(model, prompt, size):
             image_data = _.b64_json
             image_data = base64.b64decode(image_data)
             st.image(image_data, use_column_width=True)
-
-def assistant_widget(assistants):
-    st.title("Assistant")
-    # Show assistants table
-    if assistants:
-        st.session_state['assistant'] = st.selectbox(
-            'Select an assistant',
-            assistants, format_func=lambda x: x['name']
-        )
-    else:
-        st.session_state['assistant'] = None
-    return st.session_state['assistant']
-
-def vector_store_widget(vector_stores):
-    st.title("Vector Store")
-    # Show vector store table
-    if vector_stores:
-        st.session_state['vector_store'] = st.selectbox(
-            'Select a vector',
-            vector_stores, format_func=lambda x: x['name']
-        )
-    else:
-        st.session_state['vector_store'] = None
-    return st.session_state['vector_store']
-
-def file_widget(file_list):
-    st.title("File")
-    # Show file table
-    if file_list:
-        st.session_state['file'] = st.selectbox(
-            'Select a file',
-            file_list, format_func=lambda x: x['filename']
-        )
-    else:
-        st.session_state['file'] = None
-    return st.session_state['file']
-
